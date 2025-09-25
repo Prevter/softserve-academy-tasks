@@ -1,16 +1,16 @@
 #include "Analyzer.hpp"
-#include <fstream>
-#include <span>
-#include <vector>
 
+#include <fstream>
+#include <iostream>
 #include <print>
+#include <span>
 
 std::optional<FileInfo> analyze(std::filesystem::path const& path) {
     std::ifstream file;
     file.rdbuf()->pubsetbuf(nullptr, 0);
     file.open(path, std::ios::binary);
     if (!file) {
-        std::println("Failed to open file: {}", path.string());
+        std::println(std::cerr, "Failed to open file: {}", path.string());
         return std::nullopt;
     }
 

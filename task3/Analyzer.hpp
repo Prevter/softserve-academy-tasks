@@ -20,5 +20,9 @@ struct FileInfo {
     }
 };
 
-FileInfo analyze(std::span<char const> buffer);
+struct TypeStats {
+    FileInfo info;
+    size_t fileCount = 0;
+};
+
 std::optional<FileInfo> analyze(std::filesystem::path const& path);

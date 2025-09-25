@@ -34,7 +34,7 @@ User is able to remove duplicates, replace the text in items, sort list.
 - The function/method that extracts a value should provide type-safe access. If the requested type does not match to
   stored type exception should be thrown
 
-### Task 3: Threads, containers, input/output with files Skip to end of metadata
+### Task 3: Threads, containers, input/output with files
 
 **As a** developer **I want** to have an application that counts blank lines, comment lines, and physical lines of source code
 written in C/C++. **so that** I can have some internal statistic of the project.

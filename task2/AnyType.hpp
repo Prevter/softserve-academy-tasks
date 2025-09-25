@@ -1,6 +1,7 @@
 #pragma once
 #include <optional>
 #include <type_traits>
+#include <utility>
 #include <variant>
 
 class AnyType {
@@ -38,6 +39,8 @@ public:
         if constexpr (std::is_same_v<T, float>) return Type::Float;
         if constexpr (std::is_same_v<T, double>) return Type::Double;
         if constexpr (std::is_same_v<T, long double>) return Type::LongDouble;
+
+        std::unreachable();
     }
 
     template <typename T> requires std::is_arithmetic_v<T>
@@ -56,6 +59,8 @@ public:
         if constexpr (std::is_same_v<T, float>) return m_data.f;
         if constexpr (std::is_same_v<T, double>) return m_data.d;
         if constexpr (std::is_same_v<T, long double>) return m_data.ld;
+
+        std::unreachable();
     }
 
     template <typename T> requires std::is_arithmetic_v<T>

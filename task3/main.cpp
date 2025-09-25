@@ -1,7 +1,6 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
-#include <map>
 #include <print>
 #include <unordered_map>
 #include <vector>
@@ -56,12 +55,7 @@ FileType getFileType(std::filesystem::path const& path) {
     return FileType::Unknown;
 }
 
-struct TypeStats {
-    FileInfo info;
-    size_t fileCount = 0;
-};
-
-static std::map<std::filesystem::path, FileInfo> analyzedFiles;
+static std::unordered_map<std::filesystem::path, FileInfo> analyzedFiles;
 static std::unordered_map<FileType, TypeStats> fileInfos;
 static size_t totalFiles = 0;
 static FileInfo totalInfo;
@@ -69,22 +63,20 @@ static std::mutex infoMutex;
 static bool perFileOutput = false;
 
 void enqueueFile(std::filesystem::path path, FileType type, ThreadPool& threadPool) {
-    threadPool.enqueue(
-        [path = std::move(path), type]() {
-            auto info = analyze(path);
-            if (!info) return;
+    threadPool.enqueue([path = std::move(path), type]() {
+        auto info = analyze(path);
+        if (!info) return;
 
-            std::lock_guard lock(infoMutex);
-            if (perFileOutput) {
-                analyzedFiles[path] = *info;
-            } else {
-                fileInfos[type].info += *info;
-                fileInfos[type].fileCount++;
-            }
-            totalInfo += *info;
-            ++totalFiles;
+        std::lock_guard lock(infoMutex);
+        if (perFileOutput) {
+            analyzedFiles[path] = *info;
+        } else {
+            fileInfos[type].info += *info;
+            fileInfos[type].fileCount++;
         }
-    );
+        totalInfo += *info;
+        ++totalFiles;
+    });
 }
 
 void walkDirectory(std::filesystem::path const& path, ThreadPool& threadPool) {
